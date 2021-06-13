@@ -3,9 +3,9 @@
     <p id="name">{{ this.text }}</p>
     <div class="grid-container">
       <button
-        v-for="cell in cells" v-bind:key="cell._id"
+        v-for="(cell, index) in cells" :key="index"
         class="grid-item"
-        v-on:click="myFunction()">{{ cell }}</button>
+        v-on:click="myFunction(index)">{{ cell }}</button>
     </div>
   </div>
 </template>
@@ -28,8 +28,10 @@ export default {
     }
   },
   methods: {
-    myFunction() {
-       this.number = 2;
+    myFunction(index) {
+      // const index = this.cells.findIndex(cell => cell._id === id)
+      this.cells[index] = 2;
+      this.text = index;
     },
     myFunction2() {
       this.text = "hello simon"
