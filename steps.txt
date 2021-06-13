@@ -1,0 +1,12 @@
+
+
+- Create grid with locked number of rows and columns
+    * Use table
+- Make each cell a component that can be activated
+- Sidebar with locked number of alternatives (id)
+    ? Id with numbers or signs
+- An id can be active or inactive, only one id active at the same time
+- When a cell is clicked, this cell will be marked with the active id
+- An id has a color connected to it
+- Button for preview which will lock edit and turn each cell into its corresponding color
+    ? Possibility of 2 editors, one with id and one with color
