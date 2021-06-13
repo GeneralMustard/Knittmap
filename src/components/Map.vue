@@ -1,9 +1,11 @@
 <template>
   <div>
     <p id="name">{{ this.text }}</p>
-    <div class="grid-container"
-      v-for="cell in cells" v-bind:key="cell._id">
-      <button class="grid-item" v-on:click="myFunction()">{{ cell }}</button>
+    <div class="grid-container">
+      <button
+        v-for="cell in cells" v-bind:key="cell._id"
+        class="grid-item"
+        v-on:click="myFunction()">{{ cell }}</button>
     </div>
   </div>
 </template>
