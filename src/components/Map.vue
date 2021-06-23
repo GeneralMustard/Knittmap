@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <p id="name">{{ this.text }}</p>
+  <div class="map">
+    <p id="name">{{ this.cells }}</p>
     <div v-for="(row, rowInd) in cells" :key="rowInd">
       <button
         v-for="(col, colInd) in row" :key="col.id"
-        class="grid-item"
+        class="cell"
         v-on:click="updateCell(rowInd, colInd)">{{ col.val }}</button>
     </div>
     
@@ -22,11 +22,10 @@ export default {
 
   data() {
     return {
-      text: "hello saga",
       // Each list is a row
       cells: [],
       colNr: 5,
-      rowNr: 5,
+      rowNr: 5
     }
   },
   mounted() {
@@ -52,22 +51,23 @@ export default {
 </script>
 
 <style scoped>
-.grid-container {
-  display: inline-grid;
-  grid-template-columns: repeat(2, 1fr);
-  background-color: #2196F3;
-  padding: 10px;
+.map {
+  margin: 40px;
 }
 
-.grid-item {
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 20px;
-  font-size: 30px;
-  text-align: center;
+.cell {
+  height: 50px;
+  width: 50px;
+  background-color: rgba(212, 209, 209, 0.8);
+  border: 1px solid rgba(0.2, 0.2, 0.2, 0.2);
+  font-size: 20px;
 }
 
-.grid-item:hover {background-color: #3e8e41}
+.cell:hover {background-color: #ffffff}
+
+.cell:active {
+  background-color: #666565;
+}
 
 .button {
   padding: 15px 25px;
@@ -84,9 +84,5 @@ export default {
 
 .button:hover {background-color: #3e8e41}
 
-.button:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
+
 </style>

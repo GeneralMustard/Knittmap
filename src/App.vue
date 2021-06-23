@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <h1>Knittmap</h1>
     <Map/>
   </div>
 </template>
