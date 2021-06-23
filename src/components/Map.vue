@@ -1,12 +1,13 @@
 <template>
   <div>
     <p id="name">{{ this.text }}</p>
-    <div class="grid-container">
+    <div v-for="(row, rowInd) in cells" :key="rowInd">
       <button
-        v-for="(cell, index) in cells" :key="index"
+        v-for="(col, colInd) in row" :key="col.id"
         class="grid-item"
-        v-on:click="myFunction(index)">{{ cell }}</button>
+        v-on:click="updateCell(rowInd, colInd)">{{ col.val }}</button>
     </div>
+    
   </div>
 </template>
 
@@ -21,20 +22,30 @@ export default {
 
   data() {
     return {
-      number: 1,
       text: "hello saga",
-      cells: [1,2,3,4,5,6,7,8,9],
-      col: 3
+      // Each list is a row
+      cells: [],
+      colNr: 5,
+      rowNr: 5,
     }
   },
+  mounted() {
+    var tmpId = 0;
+    this.colNr 
+    for (let i = 0; i < this.rowNr; i++) {
+      var tmpRow = [];
+      for (let j = 0; j < this.colNr; j++) {
+        tmpRow.push({val: 0, id: tmpId});
+        tmpId++;
+      }
+      this.cells.push(tmpRow);
+    }
+  },
+  computed: {},
   methods: {
-    myFunction(index) {
-      // const index = this.cells.findIndex(cell => cell._id === id)
-      this.cells[index] = 2;
-      this.text = index;
-    },
-    myFunction2() {
-      this.text = "hello simon"
+    updateCell(rowInd, colInd) {
+      this.cells[rowInd][colInd].val = 1;
+      this.text = this.cells;
     }
   }
 }
@@ -43,7 +54,7 @@ export default {
 <style scoped>
 .grid-container {
   display: inline-grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(2, 1fr);
   background-color: #2196F3;
   padding: 10px;
 }
