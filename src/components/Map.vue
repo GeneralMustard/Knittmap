@@ -15,6 +15,7 @@
 export default {
   name: 'Map',
   props: {
+    option: Number
   },
   components: {
   },
@@ -42,7 +43,7 @@ export default {
   computed: {},
   methods: {
     updateCell(rowInd, colInd) {
-      this.cells[rowInd][colInd].val = 1;
+      this.cells[rowInd][colInd].val = this.option;
       this.text = this.cells;
     },
     getVal(val) {
