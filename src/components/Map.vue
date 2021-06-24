@@ -1,11 +1,10 @@
 <template>
   <div class="map">
-    <p id="name">{{ this.cells }}</p>
-    <div v-for="(row, rowInd) in cells" :key="rowInd">
+    <div class ="row" v-for="(row, rowInd) in cells" :key="rowInd">
       <button
         v-for="(col, colInd) in row" :key="col.id"
         class="cell"
-        v-on:click="updateCell(rowInd, colInd)">{{ col.val }}</button>
+        v-on:click="updateCell(rowInd, colInd)">{{ getVal(col.val) }}</button>
     </div>
     
   </div>
@@ -22,10 +21,10 @@ export default {
 
   data() {
     return {
-      // Each list is a row
+      // Each list in cells is a row
       cells: [],
-      colNr: 5,
-      rowNr: 5
+      colNr: 10,
+      rowNr: 50
     }
   },
   mounted() {
@@ -45,19 +44,32 @@ export default {
     updateCell(rowInd, colInd) {
       this.cells[rowInd][colInd].val = 1;
       this.text = this.cells;
+    },
+    getVal(val) {
+      if (val === 0) return;
+      return val;
     }
   }
 }
 </script>
 
 <style scoped>
+.row {
+  margin-left: 0px;
+  flex-wrap: nowrap;
+}
 .map {
+  height: 500px;
   margin: 40px;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .cell {
   height: 50px;
   width: 50px;
+  min-width: 50px;
+  min-height: 50px;
   background-color: rgba(212, 209, 209, 0.8);
   border: 1px solid rgba(0.2, 0.2, 0.2, 0.2);
   font-size: 20px;

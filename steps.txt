@@ -10,3 +10,6 @@
 - An id has a color connected to it
 - Button for preview which will lock edit and turn each cell into its corresponding color
     ? Possibility of 2 editors, one with id and one with color
+    
+ Notes:
+ // boxsizing borderbox
