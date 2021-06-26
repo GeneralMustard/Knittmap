@@ -60,7 +60,6 @@ export default {
   flex-wrap: nowrap;
 }
 .map {
-  height: 500px;
   margin: 40px;
   overflow-x: auto;
   overflow-y: auto;

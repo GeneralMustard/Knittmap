@@ -1,13 +1,18 @@
 <template>
   <div>
     <p>Options</p>
-    <b-form-radio-group
-      v-model="selected"
-      :options="options"
-      class="mb-3"
-      stacked
-      v-on:change="$emit('change-option', selected)"
-    ></b-form-radio-group>
+    <div
+      class="row option"
+      v-for="opt in options" :key="opt.id"
+    >
+      <b-button
+        variant="outline-primary"
+        :pressed="isActive(opt.id)"
+        v-on:click="updateActive(opt.id), $emit('change-option', active)"
+      >{{ opt.id }}</b-button>
+      <b-img v-bind="mainProps(opt.color)" rounded alt="Rounded image"></b-img>
+      <b-form-input v-model="opt.color" placeholder="opt.color"></b-form-input>
+    </div>
   </div>
 </template>
 
@@ -22,17 +27,45 @@ export default {
   },
   data() {
     return {
-      options: [0,1,2,3,4,5,6,7,8,9],
-      selected: 0
+      options: [
+          {id: 0, color: '#fc0f00'}
+        , {id: 1, color: '#FFFFFF'}
+        , {id: 2, color: '#FFFFFF'}
+        , {id: 3, color: '#FFFFFF'}
+        , {id: 4, color: '#FFFFFF'}
+        , {id: 5, color: '#FFFFFF'}
+        , {id: 6, color: '#FFFFFF'}
+        , {id: 7, color: '#FFFFFF'}
+        , {id: 8, color: '#FFFFFF'}
+        , {id: 9, color: '#FFFFFF'}
+      ],
+      active: 0
     }
   },
   mounted() {
   },
-  computed: {},
+  computed: {
+  },
   methods: {
+    mainProps(color) {
+      return { blank: true, blankColor: color, width: 40, height: 40, class: 'color-prev' }
+    },
+    updateActive(id) {
+      this.active = id;
+    },
+    isActive(id) {
+      if (id == this.active) return true;
+      return false;
+    }
   }
 }
 </script>
 
 <style scoped>
+  .option {
+    margin: 10px;
+  }
+  .color-prev {
+    border: 2px solid rgba(0.2, 0.2, 0.2, 0.2);
+  }
 </style>
