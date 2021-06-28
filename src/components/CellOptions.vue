@@ -1,18 +1,21 @@
 <template>
   <div>
-    <p>Options</p>
-    <div
-      class="row option"
-      v-for="opt in options" :key="opt.id"
-    >
-      <b-button
-        variant="outline-primary"
-        :pressed="isActive(opt.id)"
-        v-on:click="updateActive(opt.id), $emit('change-option', active)"
-      >{{ opt.id }}</b-button>
-      <b-img v-bind="mainProps(opt.color)" rounded alt="Rounded image"></b-img>
-      <b-form-input v-model="opt.color" placeholder="opt.color"></b-form-input>
-    </div>
+    <b-button v-b-toggle.OptionsSidebar>Edit Options</b-button>
+
+    <b-sidebar id="OptionsSidebar" title="Options" right>
+      <div
+        class="row option"
+        v-for="opt in options" :key="opt.id"
+      >
+        <b-button
+          variant="outline-primary"
+          :pressed="isActive(opt.id)"
+          v-on:click="updateActive(opt.id), $emit('change-option', active)"
+        >{{ opt.id }}</b-button>
+        <b-img v-bind="mainProps(opt.color)" rounded alt="Rounded image"></b-img>
+        <b-form-input v-model="opt.color" placeholder="opt.color"></b-form-input>
+      </div>
+    </b-sidebar>
   </div>
 </template>
 
