@@ -2,6 +2,18 @@
   <div>
     <b-button v-b-toggle.OptionsSidebar>Edit Options</b-button>
 
+    <div
+      class="row option"
+      v-for="opt in options" :key="opt.id"
+    >
+      <b-button
+        variant="outline-primary"
+        :pressed="isActive(opt.id)"
+        v-on:click="updateActive(opt.id), $emit('change-option', active)"
+      >{{ opt.id }}</b-button>
+      <b-img v-bind="mainProps(opt.color)" rounded alt="Rounded image"></b-img>
+    </div>
+
     <b-sidebar id="OptionsSidebar" title="Options" right>
       <div
         class="row option"
@@ -14,6 +26,7 @@
         >{{ opt.id }}</b-button>
         <b-img v-bind="mainProps(opt.color)" rounded alt="Rounded image"></b-img>
         <b-form-input v-model="opt.color" placeholder="opt.color"></b-form-input>
+        <b-button variant="danger" v-on:click="removeOption(opt.id), $emit('remove-option', opt.id), $emit('change-option', active)">x</b-button>
       </div>
     </b-sidebar>
   </div>
@@ -59,6 +72,15 @@ export default {
     isActive(id) {
       if (id == this.active) return true;
       return false;
+    },
+    removeOption(id) {
+      for (let i = 0; i < this.options.length; i++) {
+        if (id === this.options[i].id) {
+          this.options.splice(i, 1);
+          if (id === this.active) this.active = 0;
+          return;
+        }
+      }
     }
   }
 }

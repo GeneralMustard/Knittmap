@@ -3,10 +3,18 @@
     <h1>Knittmap</h1>
     <div class="row">
       <div class="col-10">
-        <Map v-bind:option="this.option"/>
+        <Map
+          v-bind:option="this.option"
+          v-bind:cells="this.cells"
+          v-bind:rowNr="this.rowNr"
+          v-bind:colNr="this.colNr"
+        />
       </div>
       <div class="col">
-        <CellOptions v-on:change-option="changeOption"/>
+        <CellOptions
+          v-on:change-option="changeOption"
+          v-on:remove-option="removeOption"
+        />
       </div>
     </div>
   </div>
@@ -24,12 +32,35 @@ export default {
   },
   data() {
     return {
-      option: null
+      option: 0,
+      cells: [],
+      colNr: 10,
+      rowNr: 50
+    }
+  },
+  mounted() {
+    var tmpId = 0;
+    this.colNr 
+    for (let i = 0; i < this.rowNr; i++) {
+      var tmpRow = [];
+      for (let j = 0; j < this.colNr; j++) {
+        tmpRow.push({val: 0, id: tmpId});
+        tmpId++;
+      }
+      this.cells.push(tmpRow);
     }
   },
   methods: {
     changeOption(opt) {
       this.option = opt;
+    },
+    removeOption(val) {
+      for (let i = 0; i < this.rowNr; i++) {
+        for (let j = 0; j < this.colNr; j++) {
+          if (val === this.cells[i][j].val)
+            this.cells[i][j].val = 0;
+        }
+      }
     }
   }
 }

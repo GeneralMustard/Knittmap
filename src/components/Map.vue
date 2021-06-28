@@ -15,31 +15,20 @@
 export default {
   name: 'Map',
   props: {
-    option: Number
+    // Each list in cells is a row
+    cells: Array,
+    option: Number,
+    colNr: Number,
+    rowNr: Number
   },
   components: {
   },
 
   data() {
     return {
-      // Each list in cells is a row
-      cells: [],
-      colNr: 10,
-      rowNr: 50
     }
   },
-  mounted() {
-    var tmpId = 0;
-    this.colNr 
-    for (let i = 0; i < this.rowNr; i++) {
-      var tmpRow = [];
-      for (let j = 0; j < this.colNr; j++) {
-        tmpRow.push({val: 0, id: tmpId});
-        tmpId++;
-      }
-      this.cells.push(tmpRow);
-    }
-  },
+  mounted() {},
   computed: {},
   methods: {
     updateCell(rowInd, colInd) {
