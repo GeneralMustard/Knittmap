@@ -1,22 +1,24 @@
 <template>
-  <div id="app" class="container">
+  <div id="app">
     <h1>Knittmap</h1>
-    <div class="row">
-      <div class="col-10">
-        <Map
-          v-bind:option="this.option"
-          v-bind:cells="this.cells"
-          v-bind:rowNr="this.rowNr"
-          v-bind:colNr="this.colNr"
-        />
-      </div>
-      <div class="col">
-        <CellOptions
-          v-on:change-option="changeOption"
-          v-on:remove-option="removeOption"
-        />
-      </div>
-    </div>
+    <b-container>
+      <b-row>
+        <b-col cols="10">
+          <Map
+            v-bind:option="this.option"
+            v-bind:cells="this.cells"
+            v-bind:rowNr="this.rowNr"
+            v-bind:colNr="this.colNr"
+          />
+        </b-col>
+        <b-col cols="2">
+          <CellOptions
+            v-on:change-option="changeOption"
+            v-on:remove-option="removeOption"
+          />
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -34,7 +36,7 @@ export default {
     return {
       option: 0,
       cells: [],
-      colNr: 10,
+      colNr: 50,
       rowNr: 50
     }
   },

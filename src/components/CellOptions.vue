@@ -7,34 +7,39 @@
     > {{ editButton }} </b-button>
 
     <div
-      class="row option"
+      class="option"
       v-for="opt in options" :key="opt.id"
     >
+      <b-row>
+        <b-button
+          variant="outline-secondary"
+          :pressed="isActive(opt.id)"
+          v-on:click="updateActive(opt.id), $emit('change-option', active)"
+        >{{ idButtonText(opt.id) }}</b-button>
 
-      <b-button
-        variant="outline-secondary"
-        :pressed="isActive(opt.id)"
-        v-on:click="updateActive(opt.id), $emit('change-option', active)"
-      >{{ opt.id }}</b-button>
+        <b-img
+          v-bind="colorPrevProps(opt.color)"
+          rounded
+        ></b-img>
+      </b-row>
 
-      <b-img
-        v-bind="mainProps(opt.color)"
-        rounded alt="Rounded image"
-      ></b-img>
+      <b-row>
+        <b-form-input
+          v-if="editOpen"
+          v-model="opt.color"
+          placeholder="opt.color"
+        ></b-form-input>
+      </b-row>
 
-      <b-button
-        v-if="editOpen"
-        variant="danger"
-        v-on:click="removeOption(opt.id),
-                    $emit('remove-option', opt.id),
-                    $emit('change-option', active)"
-      >x</b-button>
-
-      <b-form-input
-        v-if="editOpen"
-        v-model="opt.color"
-        placeholder="opt.color"
-      ></b-form-input>
+      <b-row>
+        <b-button
+          v-if="editOpen && (opt.id !== 0)"
+          variant="danger"
+          v-on:click="removeOption(opt.id),
+                      $emit('remove-option', opt.id),
+                      $emit('change-option', active)"
+        >x</b-button>
+      </b-row>
     </div>
 
     <b-button
@@ -73,8 +78,12 @@ export default {
     }
   },
   methods: {
-    mainProps(color) {
+    colorPrevProps(color) {
       return { blank: true, blankColor: color, width: 40, height: 40, class: 'color-prev' }
+    },
+    idButtonText(id) {
+      if (id === 0) return 'x';
+      return id;
     },
     updateActive(id) {
       this.active = id;
@@ -96,7 +105,6 @@ export default {
       return this.options.length - 1 !== this.allOptions.length;
     },
     addOption() {
-      // Could this be prettier?
       for (let i = 0; i < this.allOptions.length; i++) {
         var taken = false;
         for (let j = 0; j < this.options.length; j++) {
@@ -117,7 +125,7 @@ export default {
 
 <style scoped>
   .option {
-    margin: 10px;
+    margin: 15px;
   }
   .color-prev {
     border: 2px solid rgba(0.2, 0.2, 0.2, 0.2);
