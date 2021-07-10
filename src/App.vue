@@ -1,17 +1,69 @@
 <template>
   <div id="app">
     <h1>Knittmap</h1>
-    <Map/>
+    <b-container>
+      <b-row>
+        <b-col cols="10">
+          <Map
+            v-bind:option="this.option"
+            v-bind:cells="this.cells"
+            v-bind:rowNr="this.rowNr"
+            v-bind:colNr="this.colNr"
+          />
+        </b-col>
+        <b-col cols="2">
+          <CellOptions
+            v-on:change-option="changeOption"
+            v-on:remove-option="removeOption"
+          />
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
 import Map from './components/Map.vue'
+import CellOptions from './components/CellOptions.vue'
 
 export default {
   name: 'App',
   components: {
-    Map
+    Map,
+    CellOptions
+  },
+  data() {
+    return {
+      option: 0,
+      cells: [],
+      colNr: 50,
+      rowNr: 50
+    }
+  },
+  mounted() {
+    var tmpId = 0;
+    this.colNr 
+    for (let i = 0; i < this.rowNr; i++) {
+      var tmpRow = [];
+      for (let j = 0; j < this.colNr; j++) {
+        tmpRow.push({val: 0, id: tmpId});
+        tmpId++;
+      }
+      this.cells.push(tmpRow);
+    }
+  },
+  methods: {
+    changeOption(opt) {
+      this.option = opt;
+    },
+    removeOption(val) {
+      for (let i = 0; i < this.rowNr; i++) {
+        for (let j = 0; j < this.colNr; j++) {
+          if (val === this.cells[i][j].val)
+            this.cells[i][j].val = 0;
+        }
+      }
+    }
   }
 }
 </script>

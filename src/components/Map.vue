@@ -15,34 +15,24 @@
 export default {
   name: 'Map',
   props: {
+    // Each list in cells is a row
+    cells: Array,
+    option: Number,
+    colNr: Number,
+    rowNr: Number
   },
   components: {
   },
 
   data() {
     return {
-      // Each list in cells is a row
-      cells: [],
-      colNr: 10,
-      rowNr: 50
     }
   },
-  mounted() {
-    var tmpId = 0;
-    this.colNr 
-    for (let i = 0; i < this.rowNr; i++) {
-      var tmpRow = [];
-      for (let j = 0; j < this.colNr; j++) {
-        tmpRow.push({val: 0, id: tmpId});
-        tmpId++;
-      }
-      this.cells.push(tmpRow);
-    }
-  },
+  mounted() {},
   computed: {},
   methods: {
     updateCell(rowInd, colInd) {
-      this.cells[rowInd][colInd].val = 1;
+      this.cells[rowInd][colInd].val = this.option;
       this.text = this.cells;
     },
     getVal(val) {
@@ -59,7 +49,6 @@ export default {
   flex-wrap: nowrap;
 }
 .map {
-  height: 500px;
   margin: 40px;
   overflow-x: auto;
   overflow-y: auto;
