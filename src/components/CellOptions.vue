@@ -24,14 +24,6 @@
       </b-row>
 
       <b-row>
-        <b-form-input
-          v-if="editOpen"
-          v-model="opt.color"
-          placeholder="opt.color"
-        ></b-form-input>
-      </b-row>
-
-      <b-row>
         <b-button
           v-if="editOpen && (opt.id !== 0)"
           variant="danger"
@@ -49,24 +41,40 @@
       v-on:click="addOption()"
     >+</b-button>
 
+    <chrome-picker 
+      class="color-picker" 
+      v-if="editOpen" 
+      @input="updateColorOption" 
+      v-model="colors" 
+    />
   </div>
 </template>
 
 
 <script>
+import { Chrome } from 'vue-color'
 
 export default {
   name: 'CellOptions',
   props: {
   },
   components: {
+    'chrome-picker' : Chrome
   },
   data() {
     return {
       options: [{ id: 0, color: '#fc0f00' }],
       allOptions: [1,2,3,4,5,6,7,8,9],
       active: 0,
-      editOpen: false
+      editOpen: false,
+      colors: {
+        hex: '#194d33',
+        hex8: '#194D33A8',
+        hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
+        hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+        rgba: { r: 25, g: 77, b: 51, a: 1 },
+        a: 1
+      }
     }
   },
   mounted() {
@@ -118,6 +126,15 @@ export default {
           break;
         }
       }
+    },
+    updateColorOption(value) {
+      this.colors = value;
+      for (let i = 0; i < this.options.length && this.active !== 0; i++) {
+        if (this.active === this.options[i].id) {
+          this.options[i].color = value.hex;
+          return;
+        }
+      }
     }
   }
 }
@@ -129,5 +146,8 @@ export default {
   }
   .color-prev {
     border: 2px solid rgba(0.2, 0.2, 0.2, 0.2);
+  }
+  .color-picker {
+    margin: 15px;
   }
 </style>
