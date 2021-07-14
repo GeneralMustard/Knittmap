@@ -146,7 +146,9 @@ export default {
 
 <style scoped>
   .option {
-    margin: 15px;
+    margin-left: 15px;
+    margin-top: 4px;
+    margin-bottom: 4px
   }
   .color-prev {
     border: 2px solid rgba(0.2, 0.2, 0.2, 0.2);
