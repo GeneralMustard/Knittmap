@@ -1,21 +1,24 @@
 <template>
   <div>
-    <b-img class="ml-2"
+    <b-img
       @click="modalShow = !modalShow"
       v-bind="colorPrevProps(newColor)"
       rounded
     ></b-img>
 
     <b-modal
+      title="Pick a color"
+      size="sm"
       v-model="modalShow"
       @show="resetModal"
       @ok="updateSelectedColor"
     > 
-      <chrome-picker 
-        class="color-picker" 
-        @input="updateModalColor" 
-        v-model="modalColor" 
+      <div class="d-flex justify-content-center">
+        <chrome-picker 
+          @input="updateModalColor" 
+          v-model="modalColor" 
         />
+      </div>
     </b-modal>
   </div>
 </template>
@@ -43,7 +46,7 @@ export default {
   computed: {},
   methods: {
     colorPrevProps(color) {
-      return { blank: true, blankColor: color, width: 40, height: 40, class: 'color-prev' }
+      return { blank: true, blankColor: color, class: 'color-prev' }
     },
     updateModalColor(value) {
       this.modalColor = value.hex;
@@ -60,7 +63,11 @@ export default {
 </script>
 
 <style scoped>
-  .color-picker {
-    margin: 15px;
+  .color-prev {
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+    outline-color: rgb(153, 153, 153);
+    outline-style: outset;
   }
 </style>

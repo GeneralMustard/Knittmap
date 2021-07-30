@@ -1,42 +1,51 @@
 <template>
   <div>
     <b-button
+      class="mb-1"
       block
       variant="outline-primary"
       :pressed.sync="editOpen"
     > {{ editButton }} </b-button>
 
-    <div
-      class="option"
-      v-for="opt in options" :key="opt.id"
+    <Container 
+      @drop="onCellOptionDrop"
+      lock-axis="y"
     >
-      <b-row class="justify-content-md-center">
-        <b-button
-          variant="outline-secondary"
-          :pressed="isActive(opt.id)"
-          v-on:click="updateActive(opt.id), $emit('change-option', active)"
-        >{{ idButtonText(opt.id) }}</b-button>
+      <Draggable v-for="opt in options" :key="opt.id">
+        <b-container class="mt-2 mb-2">
+          <b-row>
+            <b-button
+              variant="outline-secondary"
+              :pressed="isActive(opt.id)"
+              v-on:click="updateActive(opt.id),
+                          $emit('change-option', active)"
+            >{{ idButtonText(opt.id) }}</b-button>
 
-        <ColorPicker
-          v-bind:initColor="opt.color"
-          v-bind:id="opt.id"
-          v-on:update-color-option="updateColorOption"
-        />
-      </b-row>
+            <ColorPicker
+              v-bind:initColor="opt.color"
+              v-bind:id="opt.id"
+              v-on:update-color-option="updateColorOption"
+            />
+          </b-row>
 
-      <b-row>
-        <b-button
-          v-if="editOpen && (opt.id !== 0)"
-          variant="danger"
-          v-on:click="removeOption(opt.id),
-                      $emit('remove-option', opt.id),
-                      $emit('change-option', active)"
-        >x</b-button>
-      </b-row>
-    </div>
+          <b-row>
+            <b-button
+              class="mt-1"
+              v-if="editOpen && (opt.id !== 0)"
+              variant="outline-danger"
+              block
+              v-on:click="removeOption(opt.id),
+                          $emit('remove-option', opt.id),
+                          $emit('change-option', active)"
+            >-</b-button>
+          </b-row>
+        </b-container>
+      </Draggable>
+    </Container>
 
     <b-button
-      v-if="isAddAvailable()"
+      class="mt-1"
+      v-if="editOpen && isAddAvailable()"
       block
       variant="outline-success"
       v-on:click="addOption()"
@@ -47,13 +56,16 @@
 
 <script>
 import ColorPicker from './ColorPicker.vue'
+import { Container, Draggable } from "vue-smooth-dnd";
 
 export default {
   name: 'CellOptions',
   props: {
   },
   components: {
-    ColorPicker
+    ColorPicker,
+    Container,
+    Draggable
   },
   data() {
     return {
@@ -117,15 +129,26 @@ export default {
           return;
         }
       }
+    },
+    onCellOptionDrop(dropResult) {
+      const { removedIndex, addedIndex, payload } = dropResult;
+      if (removedIndex === null && addedIndex === null) return;
+
+      let itemToAdd = payload;
+
+      if (removedIndex !== null) {
+        itemToAdd = this.options.splice(removedIndex, 1)[0];
+      }
+
+      if (addedIndex !== null) {
+        this.options.splice(addedIndex, 0, itemToAdd);
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-  .option {
-    margin: 15px;
-  }
   .color-prev {
     border: 2px solid rgba(0.2, 0.2, 0.2, 0.2);
   }
