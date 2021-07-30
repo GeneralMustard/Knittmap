@@ -10,17 +10,18 @@
       class="option"
       v-for="opt in options" :key="opt.id"
     >
-      <b-row>
+      <b-row class="justify-content-md-center">
         <b-button
           variant="outline-secondary"
           :pressed="isActive(opt.id)"
           v-on:click="updateActive(opt.id), $emit('change-option', active)"
         >{{ idButtonText(opt.id) }}</b-button>
 
-        <b-img
-          v-bind="colorPrevProps(opt.color)"
-          rounded
-        ></b-img>
+        <ColorPicker
+          v-bind:initColor="opt.color"
+          v-bind:id="opt.id"
+          v-on:update-color-option="updateColorOption"
+        />
       </b-row>
 
       <b-row>
@@ -40,41 +41,26 @@
       variant="outline-success"
       v-on:click="addOption()"
     >+</b-button>
-
-    <chrome-picker 
-      class="color-picker" 
-      v-if="editOpen" 
-      @input="updateColorOption" 
-      v-model="colors" 
-    />
   </div>
 </template>
 
 
 <script>
-import { Chrome } from 'vue-color'
+import ColorPicker from './ColorPicker.vue'
 
 export default {
   name: 'CellOptions',
   props: {
   },
   components: {
-    'chrome-picker' : Chrome
+    ColorPicker
   },
   data() {
     return {
-      options: [{ id: 0, color: '#fc0f00' }],
+      options: [{ id: 0, color: '#ABABAB' }],
       allOptions: [1,2,3,4,5,6,7,8,9],
       active: 0,
-      editOpen: false,
-      colors: {
-        hex: '#194d33',
-        hex8: '#194D33A8',
-        hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
-        hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
-        rgba: { r: 25, g: 77, b: 51, a: 1 },
-        a: 1
-      }
+      editOpen: false
     }
   },
   mounted() {
@@ -86,9 +72,6 @@ export default {
     }
   },
   methods: {
-    colorPrevProps(color) {
-      return { blank: true, blankColor: color, width: 40, height: 40, class: 'color-prev' }
-    },
     idButtonText(id) {
       if (id === 0) return 'x';
       return id;
@@ -127,11 +110,10 @@ export default {
         }
       }
     },
-    updateColorOption(value) {
-      this.colors = value;
-      for (let i = 0; i < this.options.length && this.active !== 0; i++) {
-        if (this.active === this.options[i].id) {
-          this.options[i].color = value.hex;
+    updateColorOption(id, newColor) {
+      for (let i = 0; i < this.options.length; i++) {
+        if (id == this.options[i].id) {
+          this.options[i].color = newColor;
           return;
         }
       }
@@ -146,8 +128,5 @@ export default {
   }
   .color-prev {
     border: 2px solid rgba(0.2, 0.2, 0.2, 0.2);
-  }
-  .color-picker {
-    margin: 15px;
   }
 </style>
