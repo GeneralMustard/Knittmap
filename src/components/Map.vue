@@ -23,7 +23,8 @@ export default {
     cells: Array,
     option: Number,
     colNr: Number,
-    rowNr: Number
+    rowNr: Number,
+    showColor: Boolean
   },
   components: {
   },
@@ -44,6 +45,11 @@ export default {
       return val;
     },
     getColor(val) {
+      if (!this.showColor) {
+        if (val === 0) return '#ABABAB';
+        return '#FFFFFF';
+      }
+
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].id === val) {
           return this.options[i].color;
