@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-button
+      class="mb-1"
       block
       variant="outline-primary"
       :pressed.sync="editOpen"
@@ -11,54 +12,50 @@
       lock-axis="y"
     >
       <Draggable v-for="opt in options" :key="opt.id">
-        <div class="option">
+        <b-container class="mt-2 mb-2">
           <b-row>
             <b-button
               variant="outline-secondary"
               :pressed="isActive(opt.id)"
-              v-on:click="updateActive(opt.id), $emit('change-option', active)"
+              v-on:click="updateActive(opt.id),
+                          $emit('change-option', active)"
             >{{ idButtonText(opt.id) }}</b-button>
 
-            <b-img
-              v-bind="colorPrevProps(opt.color)"
-              rounded
-            ></b-img>
-          </b-row>
-
-          <b-row>
-            <b-form-input
-              v-if="editOpen"
-              v-model="opt.color"
-              placeholder="opt.color"
-            ></b-form-input>
+            <ColorPicker
+              v-bind:initColor="opt.color"
+              v-bind:id="opt.id"
+              v-on:update-color-option="updateColorOption"
+            />
           </b-row>
 
           <b-row>
             <b-button
+              class="mt-1"
               v-if="editOpen && (opt.id !== 0)"
-              variant="danger"
+              variant="outline-danger"
+              block
               v-on:click="removeOption(opt.id),
                           $emit('remove-option', opt.id),
                           $emit('change-option', active)"
-            >x</b-button>
+            >-</b-button>
           </b-row>
-        </div>
+        </b-container>
       </Draggable>
     </Container>
 
     <b-button
-      v-if="isAddAvailable()"
+      class="mt-1"
+      v-if="editOpen && isAddAvailable()"
       block
       variant="outline-success"
       v-on:click="addOption()"
     >+</b-button>
-
   </div>
 </template>
 
 
 <script>
-
+import ColorPicker from './ColorPicker.vue'
 import { Container, Draggable } from "vue-smooth-dnd";
 
 export default {
@@ -66,11 +63,13 @@ export default {
   props: {
   },
   components: {
-    Container, Draggable
+    ColorPicker,
+    Container,
+    Draggable
   },
   data() {
     return {
-      options: [{ id: 0, color: '#fc0f00' }],
+      options: [{ id: 0, color: '#ABABAB' }],
       allOptions: [1,2,3,4,5,6,7,8,9],
       active: 0,
       editOpen: false
@@ -85,9 +84,6 @@ export default {
     }
   },
   methods: {
-    colorPrevProps(color) {
-      return { blank: true, blankColor: color, width: 40, height: 40, class: 'color-prev' }
-    },
     idButtonText(id) {
       if (id === 0) return 'x';
       return id;
@@ -126,6 +122,14 @@ export default {
         }
       }
     },
+    updateColorOption(id, newColor) {
+      for (let i = 0; i < this.options.length; i++) {
+        if (id == this.options[i].id) {
+          this.options[i].color = newColor;
+          return;
+        }
+      }
+    },
     onCellOptionDrop(dropResult) {
       const { removedIndex, addedIndex, payload } = dropResult;
       if (removedIndex === null && addedIndex === null) return;
@@ -145,11 +149,6 @@ export default {
 </script>
 
 <style scoped>
-  .option {
-    margin-left: 15px;
-    margin-top: 4px;
-    margin-bottom: 4px
-  }
   .color-prev {
     border: 2px solid rgba(0.2, 0.2, 0.2, 0.2);
   }
