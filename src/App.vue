@@ -5,7 +5,8 @@
       <b-row>
         <b-col cols="10">
           <Map
-            v-bind:option="this.option"
+            v-bind:options="this.options"
+            v-bind:option="this.activeOption"
             v-bind:cells="this.cells"
             v-bind:rowNr="this.rowNr"
             v-bind:colNr="this.colNr"
@@ -13,7 +14,9 @@
         </b-col>
         <b-col cols="2">
           <CellOptions
-            v-on:change-option="changeOption"
+            v-bind:activeOption="this.activeOption"
+            v-bind:options="this.options"
+            v-on:change-active-option="changeActiveOption"
             v-on:remove-option="removeOption"
           />
         </b-col>
@@ -34,7 +37,9 @@ export default {
   },
   data() {
     return {
-      option: 0,
+      options: [{ id: 0, color: '#ABABAB' }],
+      activeOption: 0,
+
       cells: [],
       colNr: 50,
       rowNr: 50
@@ -53,16 +58,29 @@ export default {
     }
   },
   methods: {
-    changeOption(opt) {
-      this.option = opt;
+    // // Change the active option
+    changeActiveOption(opt) {
+      this.activeOption = opt;
     },
-    removeOption(val) {
+    // Remove an option
+    removeOption(id) {
+      // remove option with corresponding id from list of options
+      for (let i = 0; i < this.options.length; i++) {
+        if (id === this.options[i].id) {
+          this.options.splice(i, 1);
+          if (id === this.activeOption) this.activeOption = 0;
+          break;
+        }
+      }
+      // replace all vals with 0 for cells with the removed option
       for (let i = 0; i < this.rowNr; i++) {
         for (let j = 0; j < this.colNr; j++) {
-          if (val === this.cells[i][j].val)
+          if (id === this.cells[i][j].val)
             this.cells[i][j].val = 0;
         }
       }
+      // change the active option if it was active when removed
+      if (this.activeOption === id) this.changeActiveOption(0);
     }
   }
 }

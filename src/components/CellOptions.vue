@@ -17,8 +17,7 @@
             <b-button
               variant="outline-secondary"
               :pressed="isActive(opt.id)"
-              v-on:click="updateActive(opt.id),
-                          $emit('change-option', active)"
+              v-on:click="$emit('change-active-option', opt.id)"
             >{{ idButtonText(opt.id) }}</b-button>
 
             <ColorPicker
@@ -34,9 +33,7 @@
               v-if="editOpen && (opt.id !== 0)"
               variant="outline-danger"
               block
-              v-on:click="removeOption(opt.id),
-                          $emit('remove-option', opt.id),
-                          $emit('change-option', active)"
+              v-on:click="$emit('remove-option', opt.id)"
             >-</b-button>
           </b-row>
         </b-container>
@@ -48,7 +45,7 @@
       v-if="editOpen && isAddAvailable()"
       block
       variant="outline-success"
-      v-on:click="addOption()"
+      v-on:click="addOption"
     >+</b-button>
   </div>
 </template>
@@ -61,6 +58,8 @@ import { Container, Draggable } from "vue-smooth-dnd";
 export default {
   name: 'CellOptions',
   props: {
+    options: Array,
+    activeOption: Number
   },
   components: {
     ColorPicker,
@@ -69,9 +68,7 @@ export default {
   },
   data() {
     return {
-      options: [{ id: 0, color: '#ABABAB' }],
       allOptions: [1,2,3,4,5,6,7,8,9],
-      active: 0,
       editOpen: false
     }
   },
@@ -88,25 +85,14 @@ export default {
       if (id === 0) return 'x';
       return id;
     },
-    updateActive(id) {
-      this.active = id;
-    },
     isActive(id) {
-      if (id == this.active) return true;
+      if (id == this.activeOption) return true;
       return false;
-    },
-    removeOption(id) {
-      for (let i = 0; i < this.options.length; i++) {
-        if (id === this.options[i].id) {
-          this.options.splice(i, 1);
-          if (id === this.active) this.active = 0;
-          return;
-        }
-      }
     },
     isAddAvailable() {
       return this.options.length - 1 !== this.allOptions.length;
     },
+    // Add a new option
     addOption() {
       for (let i = 0; i < this.allOptions.length; i++) {
         var taken = false;
@@ -122,6 +108,7 @@ export default {
         }
       }
     },
+    // Update the color for an option
     updateColorOption(id, newColor) {
       for (let i = 0; i < this.options.length; i++) {
         if (id == this.options[i].id) {

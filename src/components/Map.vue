@@ -2,9 +2,11 @@
   <div class="map">
     <div class ="row" v-for="(row, rowInd) in cells" :key="rowInd">
       <button
-        v-for="(col, colInd) in row" :key="col.id"
+        v-for="cell in row" :key="cell.id"
+        v-bind:style="{ backgroundColor: getColor(cell.val) }"
         class="cell"
-        v-on:click="updateCell(rowInd, colInd)">{{ getVal(col.val) }}</button>
+        v-on:click="updateCell(cell)"
+      >{{ getVal(cell.val) }}</button>
     </div>
     
   </div>
@@ -15,6 +17,8 @@
 export default {
   name: 'Map',
   props: {
+    // The different options and their color
+    options: Array,
     // Each list in cells is a row
     cells: Array,
     option: Number,
@@ -28,16 +32,24 @@ export default {
     return {
     }
   },
-  mounted() {},
+  mounted() {
+  },
   computed: {},
   methods: {
-    updateCell(rowInd, colInd) {
-      this.cells[rowInd][colInd].val = this.option;
-      this.text = this.cells;
+    updateCell(cell) {
+      cell.val = this.option;
     },
     getVal(val) {
       if (val === 0) return;
       return val;
+    },
+    getColor(val) {
+      for (let i = 0; i < this.options.length; i++) {
+        if (this.options[i].id === val) {
+          return this.options[i].color;
+        } 
+      }
+      return '#FFFFFF';
     }
   }
 }
@@ -50,6 +62,7 @@ export default {
 }
 .map {
   margin: 40px;
+  height: 500px;
   overflow-x: auto;
   overflow-y: auto;
 }
@@ -59,15 +72,8 @@ export default {
   width: 50px;
   min-width: 50px;
   min-height: 50px;
-  background-color: rgba(212, 209, 209, 0.8);
   border: 1px solid rgba(0.2, 0.2, 0.2, 0.2);
   font-size: 20px;
-}
-
-.cell:hover {background-color: #ffffff}
-
-.cell:active {
-  background-color: #666565;
 }
 
 .button {
