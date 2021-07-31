@@ -23,7 +23,7 @@
             <ColorPicker
               v-bind:initColor="opt.color"
               v-bind:id="opt.id"
-              v-on:update-color-option="$emit('update-color-option')"
+              v-on:update-color-option="updateColorOption"
             />
           </b-row>
 
@@ -45,7 +45,7 @@
       v-if="editOpen && isAddAvailable()"
       block
       variant="outline-success"
-      v-on:click="$emit('add-option')"
+      v-on:click="addOption"
     >+</b-button>
   </div>
 </template>
@@ -59,8 +59,7 @@ export default {
   name: 'CellOptions',
   props: {
     options: Array,
-    activeOption: Number,
-    allOptions: Array
+    activeOption: Number
   },
   components: {
     ColorPicker,
@@ -69,6 +68,7 @@ export default {
   },
   data() {
     return {
+      allOptions: [1,2,3,4,5,6,7,8,9],
       editOpen: false
     }
   },
@@ -92,10 +92,31 @@ export default {
     isAddAvailable() {
       return this.options.length - 1 !== this.allOptions.length;
     },
-    // updateColorOption(id, newColor) {
-    //   //TODO can this be passed direcly?
-    //   this.$emit('update-color-option', id, newColor);
-    // },
+    // Add a new option
+    addOption() {
+      for (let i = 0; i < this.allOptions.length; i++) {
+        var taken = false;
+        for (let j = 0; j < this.options.length; j++) {
+          if (this.allOptions[i] === this.options[j].id) {
+            taken = true;
+            break;
+          }
+        }
+        if (!taken) {
+          this.options.push({ id: this.allOptions[i], color: '#FFFFFF' });
+          break;
+        }
+      }
+    },
+    // Update the color for an option
+    updateColorOption(id, newColor) {
+      for (let i = 0; i < this.options.length; i++) {
+        if (id == this.options[i].id) {
+          this.options[i].color = newColor;
+          return;
+        }
+      }
+    },
     onCellOptionDrop(dropResult) {
       const { removedIndex, addedIndex, payload } = dropResult;
       if (removedIndex === null && addedIndex === null) return;

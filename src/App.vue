@@ -5,6 +5,7 @@
       <b-row>
         <b-col cols="10">
           <Map
+            v-bind:options="this.options"
             v-bind:option="this.activeOption"
             v-bind:cells="this.cells"
             v-bind:rowNr="this.rowNr"
@@ -15,11 +16,8 @@
           <CellOptions
             v-bind:activeOption="this.activeOption"
             v-bind:options="this.options"
-            v-bind:allOptions="this.allOptions"
             v-on:change-active-option="changeActiveOption"
             v-on:remove-option="removeOption"
-            v-on:add-option="addOption"
-            v-on:update-color-option="updateColorOption"
           />
         </b-col>
       </b-row>
@@ -39,7 +37,6 @@ export default {
   },
   data() {
     return {
-      allOptions: [1,2,3,4,5,6,7,8,9],
       options: [{ id: 0, color: '#ABABAB' }],
       activeOption: 0,
 
@@ -61,7 +58,7 @@ export default {
     }
   },
   methods: {
-    // Change the active option
+    // // Change the active option
     changeActiveOption(opt) {
       this.activeOption = opt;
     },
@@ -82,32 +79,8 @@ export default {
             this.cells[i][j].val = 0;
         }
       }
+      // change the active option if it was active when removed
       if (this.activeOption === id) this.changeActiveOption(0);
-    },
-    // Add a new option
-    addOption() {
-      for (let i = 0; i < this.allOptions.length; i++) {
-        var taken = false;
-        for (let j = 0; j < this.options.length; j++) {
-          if (this.allOptions[i] === this.options[j].id) {
-            taken = true;
-            break;
-          }
-        }
-        if (!taken) {
-          this.options.push({ id: this.allOptions[i], color: '#FFFFFF' });
-          break;
-        }
-      }
-    },
-    // Update the color for an option
-    updateColorOption(id, newColor) {
-      for (let i = 0; i < this.options.length; i++) {
-        if (id == this.options[i].id) {
-          this.options[i].color = newColor;
-          return;
-        }
-      }
     }
   }
 }
