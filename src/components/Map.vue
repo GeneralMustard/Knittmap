@@ -4,7 +4,9 @@
       <button
         v-for="(col, colInd) in row" :key="col.id"
         class="cell"
-        v-on:click="updateCell(rowInd, colInd)">{{ getVal(col.val) }}</button>
+        v-bind:style="{ backgroundColor: '#ABABAB' }"
+        v-on:click="updateCell(rowInd, colInd)"
+      >{{ getVal(col.val) }}</button>
     </div>
     
   </div>
@@ -28,12 +30,13 @@ export default {
     return {
     }
   },
-  mounted() {},
+  mounted() {
+  },
   computed: {},
   methods: {
     updateCell(rowInd, colInd) {
+      // TODO just send in cell
       this.cells[rowInd][colInd].val = this.option;
-      this.text = this.cells;
     },
     getVal(val) {
       if (val === 0) return;
@@ -59,7 +62,6 @@ export default {
   width: 50px;
   min-width: 50px;
   min-height: 50px;
-  background-color: rgba(212, 209, 209, 0.8);
   border: 1px solid rgba(0.2, 0.2, 0.2, 0.2);
   font-size: 20px;
 }
