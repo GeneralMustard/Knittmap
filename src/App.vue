@@ -1,6 +1,15 @@
 <template>
   <div id="app">
-    <h1>Knittmap</h1>
+    <b-navbar type="dark" variant="dark" class="mb-2 mt-2">
+      <b-navbar-brand>Knittmap</b-navbar-brand>
+
+      <b-navbar-nav class="ml-auto">
+      <b-form-checkbox
+        v-model="showColor"
+        switch
+      >Show color</b-form-checkbox>
+      </b-navbar-nav>
+    </b-navbar>
     <b-container>
       <b-row>
         <b-col cols="10">
@@ -10,6 +19,7 @@
             v-bind:cells="this.cells"
             v-bind:rowNr="this.rowNr"
             v-bind:colNr="this.colNr"
+            v-bind:showColor="this.showColor"
           />
         </b-col>
         <b-col cols="2">
@@ -42,7 +52,9 @@ export default {
 
       cells: [],
       colNr: 50,
-      rowNr: 50
+      rowNr: 50,
+
+      showColor: false
     }
   },
   mounted() {
@@ -92,7 +104,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #ffffff;
 }
 </style>
