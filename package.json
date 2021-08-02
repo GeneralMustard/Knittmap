@@ -10,6 +10,7 @@
   "dependencies": {
     "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.5",
+    "file-saver": "^2.0.5",
     "vue": "^2.6.11",
     "vue-color": "^2.8.1",
     "vue-smooth-dnd": "^0.8.1"

@@ -1,15 +1,29 @@
 <template>
   <div id="app">
-    <b-navbar type="dark" variant="dark" class="mb-2 mt-2">
+    <b-navbar type="dark" variant="dark" class="mb-2">
       <b-navbar-brand>Knittmap</b-navbar-brand>
 
       <b-navbar-nav class="ml-auto">
-      <b-form-checkbox
-        v-model="showColor"
-        switch
-      >Show color</b-form-checkbox>
+        <b-button-group size="sm">
+          <b-button
+            variant="light" class="mr-2" v-on:click="initMap"
+          >New</b-button>
+          <b-button
+            variant="success" class="mr-2" v-on:click="saveFile"
+          >Save</b-button>
+          <b-button
+            class="mr-2"
+            v-b-modal.load-file
+          >Load</b-button>
+          <b-button
+            variant="outline-light" :pressed.sync="showColor"
+          >Color</b-button>
+        </b-button-group>
       </b-navbar-nav>
     </b-navbar>
+
+    <LoadFile v-on:load-file="loadFile"/>
+    
     <b-container>
       <b-row>
         <b-col cols="10">
@@ -39,38 +53,55 @@
 import Map from './components/Map.vue'
 import CellOptions from './components/CellOptions.vue'
 
+import LoadFile from './components/LoadFile'
+import FileSaver from 'file-saver';
+
 export default {
   name: 'App',
   components: {
     Map,
-    CellOptions
+    CellOptions,
+    LoadFile
   },
   data() {
     return {
       options: [{ id: 0, color: '#ABABAB' }],
-      activeOption: 0,
-
       cells: [],
-      colNr: 50,
-      rowNr: 50,
 
+      activeOption: 0,
       showColor: false
     }
   },
-  mounted() {
-    var tmpId = 0;
-    this.colNr 
-    for (let i = 0; i < this.rowNr; i++) {
-      var tmpRow = [];
-      for (let j = 0; j < this.colNr; j++) {
-        tmpRow.push({val: 0, id: tmpId});
-        tmpId++;
-      }
-      this.cells.push(tmpRow);
+  computed: {
+    rowNr() {
+      return this.cells.length;
+    },
+    colNr() {
+      if (this.cells[0]) return this.cells[0].length;
+      return 0;
     }
   },
+  mounted() {
+    this.initMap();
+  },
   methods: {
-    // // Change the active option
+    // Fill the map with empty cells
+    initMap() {
+      this.cells = []; // reset cells
+      var rowNr = 10;  // initial value
+      var colNr = 10;  // initial value
+
+      var tmpId = 0;
+      for (let i = 0; i < rowNr; i++) {
+        var tmpRow = [];
+        for (let j = 0; j < colNr; j++) {
+          tmpRow.push({val: 0, id: tmpId});
+          tmpId++;
+        }
+        this.cells.push(tmpRow);
+      }
+    },
+    // Change the active option
     changeActiveOption(opt) {
       this.activeOption = opt;
     },
@@ -93,6 +124,22 @@ export default {
       }
       // change the active option if it was active when removed
       if (this.activeOption === id) this.changeActiveOption(0);
+    },
+    // Save the active knittmap to a json-file
+    saveFile() {
+      var data = { options: this.options, cells: this.cells };
+      var blob = new Blob([JSON.stringify(data)]);
+      FileSaver.saveAs(blob, "knittmap.json");
+    },
+    // Load a file and render the knittmap from this
+    loadFile(file) {
+      let reader = new FileReader();
+      reader.onload = e => {
+        var data = JSON.parse(e.target.result);
+        this.options = data.options;
+        this.cells = data.cells;
+      };
+      reader.readAsText(file);
     }
   }
 }
