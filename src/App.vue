@@ -6,14 +6,21 @@
       <b-navbar-nav class="mr-auto ml-auto">
         <b-button-group size="sm">
           <b-button
+            variant="outline-light"
             :disabled="zoomOutAvailable()"
             class="mr-2"
-            v-on:click="zoomIn(-5)"
+            v-on:click="zoom(-1)"
           >Zoom out</b-button>
           <b-button
+            variant="outline-light"
             :disabled="zoomInAvailable()"
-            v-on:click="zoomIn(5)"
+            class="mr-2"
+            v-on:click="zoom(1)"
           >Zoom in</b-button>
+          <b-button
+            variant="outline-light"
+            :pressed.sync="preview"
+          >Preview</b-button>
         </b-button-group>
       </b-navbar-nav>
 
@@ -29,29 +36,27 @@
             class="mr-2"
             v-b-modal.load-file
           >Load</b-button>
-          <b-button
-            variant="outline-light" :pressed.sync="showColor"
-          >Color</b-button>
         </b-button-group>
       </b-navbar-nav>
     </b-navbar>
 
     <LoadFile v-on:load-file="loadFile"/>
-    
+
     <b-container>
       <b-row>
-        <b-col cols="10">
+        <b-col>
           <Map
             v-bind:options="this.options"
             v-bind:option="this.activeOption"
             v-bind:cells="this.cells"
             v-bind:rowNr="this.rowNr"
             v-bind:colNr="this.colNr"
-            v-bind:showColor="this.showColor"
-            v-bind:zoom="this.zoom"
+            v-bind:workZoom="this.workZoom"
+            v-bind:prevZoom="this.prevZoom"
+            v-bind:preview="this.preview"
           />
         </b-col>
-        <b-col cols="2">
+        <b-col v-if=!preview cols="2">
           <CellOptions
             v-bind:activeOption="this.activeOption"
             v-bind:options="this.options"
@@ -84,9 +89,11 @@ export default {
       cells: [],
 
       activeOption: 0,
-      showColor: false,
 
-      zoom: 20
+      workZoom: 20,
+      prevZoom: 10,
+
+      preview: false
     }
   },
   computed: {
@@ -105,8 +112,8 @@ export default {
     // Fill the map with empty cells
     initMap() {
       this.cells = []; // reset cells
-      var rowNr = 10;  // initial value
-      var colNr = 10;  // initial value
+      var rowNr = 55;  // initial value
+      var colNr = 8;  // initial value
 
       var tmpId = 0;
       for (let i = 0; i < rowNr; i++) {
@@ -158,14 +165,17 @@ export default {
       };
       reader.readAsText(file);
     },
-    zoomIn(z) {
-      this.zoom = this.zoom + z;
+    zoom(n) {
+      if (this.preview) this.prevZoom += (5 * n);
+      else this.workZoom += (5 * n);
     },
     zoomOutAvailable() {
-      return this.zoom <= 10;
+      if (this.preview) return this.prevZoom <= 10;
+      else return this.workZoom <= 10;
     },
     zoomInAvailable() {
-      return this.zoom >= 55;
+      if (this.preview) return this.prevZoom >= 55;
+      else return this.workZoom >= 55;
     }
   }
 }
