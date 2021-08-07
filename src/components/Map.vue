@@ -3,10 +3,10 @@
     <div class ="row" v-for="(row, rowInd) in cells" :key="rowInd">
       <button
         v-for="cell in row" :key="cell.id"
-        v-bind:style="{ backgroundColor: getColor(cell.val) }"
+        v-bind:style="{ backgroundColor: getColor(cell.val), width: getZoom(), height: getZoom() }"
         class="cell"
         v-on:click="updateCell(cell)"
-      >{{ getVal(cell.val) }}</button>
+      />
     </div>
     
   </div>
@@ -24,7 +24,8 @@ export default {
     option: Number,
     colNr: Number,
     rowNr: Number,
-    showColor: Boolean
+    showColor: Boolean,
+    zoom: Number
   },
   components: {
   },
@@ -37,18 +38,17 @@ export default {
   },
   computed: {},
   methods: {
+    getZoom() {
+      return this.zoom + 'px';
+    },
     updateCell(cell) {
       cell.val = this.option;
     },
-    getVal(val) {
-      if (val === 0) return;
-      return val;
-    },
     getColor(val) {
-      if (!this.showColor) {
-        if (val === 0) return '#ABABAB';
-        return '#FFFFFF';
-      }
+      // if (!this.showColor) {
+      //   if (val === 0) return '#ABABAB';
+      //   return '#FFFFFF';
+      // }
 
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].id === val) {
@@ -67,35 +67,12 @@ export default {
   flex-wrap: nowrap;
 }
 .map {
-  margin: 40px;
   height: 500px;
   overflow-x: auto;
   overflow-y: auto;
 }
 
 .cell {
-  height: 50px;
-  width: 50px;
-  min-width: 50px;
-  min-height: 50px;
   border: 1px solid rgba(0.2, 0.2, 0.2, 0.2);
-  font-size: 20px;
 }
-
-.button {
-  padding: 15px 25px;
-  font-size: 24px;
-  text-align: center;
-  cursor: pointer;
-  outline: none;
-  color: #fff;
-  background-color: #04AA6D;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 9px #999;
-}
-
-.button:hover {background-color: #3e8e41}
-
-
 </style>

@@ -3,6 +3,20 @@
     <b-navbar type="dark" variant="dark" class="mb-2">
       <b-navbar-brand>Knittmap</b-navbar-brand>
 
+      <b-navbar-nav class="mr-auto ml-auto">
+        <b-button-group size="sm">
+          <b-button
+            :disabled="zoomOutAvailable()"
+            class="mr-2"
+            v-on:click="zoomIn(-5)"
+          >Zoom out</b-button>
+          <b-button
+            :disabled="zoomInAvailable()"
+            v-on:click="zoomIn(5)"
+          >Zoom in</b-button>
+        </b-button-group>
+      </b-navbar-nav>
+
       <b-navbar-nav class="ml-auto">
         <b-button-group size="sm">
           <b-button
@@ -34,6 +48,7 @@
             v-bind:rowNr="this.rowNr"
             v-bind:colNr="this.colNr"
             v-bind:showColor="this.showColor"
+            v-bind:zoom="this.zoom"
           />
         </b-col>
         <b-col cols="2">
@@ -69,7 +84,9 @@ export default {
       cells: [],
 
       activeOption: 0,
-      showColor: false
+      showColor: false,
+
+      zoom: 20
     }
   },
   computed: {
@@ -140,6 +157,15 @@ export default {
         this.cells = data.cells;
       };
       reader.readAsText(file);
+    },
+    zoomIn(z) {
+      this.zoom = this.zoom + z;
+    },
+    zoomOutAvailable() {
+      return this.zoom <= 10;
+    },
+    zoomInAvailable() {
+      return this.zoom >= 55;
     }
   }
 }
