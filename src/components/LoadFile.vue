@@ -14,6 +14,8 @@
         placeholder="Choose or drop file"
         drop-placeholder="Drop file here"
       ></b-form-file>
+
+      <p class="mt-2">Note: will overwrite current map</p>
     </b-modal>
   </div>
 </template>

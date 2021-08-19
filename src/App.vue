@@ -35,7 +35,7 @@
       <b-navbar-nav class="ml-auto">
         <b-button-group size="sm">
           <b-button
-            variant="light" class="mr-2" v-on:click="initMap"
+            v-b-modal.new-map variant="light" class="mr-2"
           >New</b-button>
           <b-button
             variant="success" class="mr-2" v-on:click="saveFile"
@@ -48,6 +48,7 @@
       </b-navbar-nav>
     </b-navbar>
 
+    <NewMap v-on:new-map="initMap"/>
     <LoadFile v-on:load-file="loadFile"/>
 
     <b-container>
@@ -65,7 +66,7 @@
             v-bind:prevReps="this.prevReps"
           />
         </b-col>
-        <b-col v-if=!preview cols="2">
+        <b-col v-if="!(preview||(options.length === 0))" cols="2">
           <CellOptions
             v-bind:activeOption="this.activeOption"
             v-bind:options="this.options"
@@ -82,6 +83,7 @@
 import Map from './components/Map.vue'
 import CellOptions from './components/CellOptions.vue'
 
+import NewMap from './components/NewMap'
 import LoadFile from './components/LoadFile'
 import FileSaver from 'file-saver';
 
@@ -90,11 +92,12 @@ export default {
   components: {
     Map,
     CellOptions,
+    NewMap,
     LoadFile
   },
   data() {
     return {
-      options: [{ id: 0, color: '#ABABAB' }],
+      options: [],
       cells: [],
 
       activeOption: 0,
@@ -116,15 +119,14 @@ export default {
     }
   },
   mounted() {
-    this.initMap();
+    this.$bvModal.show('new-map');
   },
   methods: {
-    // Fill the map with empty cells
-    initMap() {
-      this.cells = []; // reset cells
-      var rowNr = 55;  // initial value
-      var colNr = 8;  // initial value
+    initMap(rowNr, colNr) {
+      this.options = [{ id: 0, color: '#ABABAB' }];
 
+      this.cells = []; // reset cells
+      // Fill the map with empty cells
       var tmpId = 0;
       for (let i = 0; i < rowNr; i++) {
         var tmpRow = [];
