@@ -24,6 +24,14 @@
         </b-button-group>
       </b-navbar-nav>
 
+      <b-form-spinbutton
+        v-if=preview
+        v-model="prevReps"
+        min="1" max="10"
+        size="sm"
+        inline
+      />
+
       <b-navbar-nav class="ml-auto">
         <b-button-group size="sm">
           <b-button
@@ -54,6 +62,7 @@
             v-bind:workZoom="this.workZoom"
             v-bind:prevZoom="this.prevZoom"
             v-bind:preview="this.preview"
+            v-bind:prevReps="this.prevReps"
           />
         </b-col>
         <b-col v-if=!preview cols="2">
@@ -93,7 +102,8 @@ export default {
       workZoom: 20,
       prevZoom: 10,
 
-      preview: false
+      preview: false,
+      prevReps: 3
     }
   },
   computed: {

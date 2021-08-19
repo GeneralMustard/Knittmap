@@ -45,15 +45,15 @@ export default {
     rowNr: Number,
     workZoom: Number,
     prevZoom: Number,
-    preview: Boolean
+    preview: Boolean,
+    prevReps: Number
   },
   components: {
   },
 
   data() {
     return {
-      windowHeight: window.innerHeight - 80 + 'px',
-      reps: 4
+      windowHeight: window.innerHeight - 80 + 'px'
     }
   },
   mounted() {
@@ -67,7 +67,7 @@ export default {
   methods: {
     getRows(row) {
       var tmp = [];
-      for (let i = 0; i < this.reps; i++) {
+      for (let i = 0; i < this.prevReps; i++) {
         tmp.push(...row);
       }
       return tmp;
