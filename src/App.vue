@@ -87,6 +87,8 @@ import NewMap from './components/NewMap'
 import LoadFile from './components/LoadFile'
 import FileSaver from 'file-saver';
 
+import {v4 as uuidv4} from 'uuid';
+
 export default {
   name: 'App',
   components: {
@@ -127,12 +129,13 @@ export default {
 
       this.cells = []; // reset cells
       // Fill the map with empty cells
-      var tmpId = 0;
+      //var tmpId = 0;
+      
       for (let i = 0; i < rowNr; i++) {
         var tmpRow = [];
         for (let j = 0; j < colNr; j++) {
-          tmpRow.push({val: 0, id: tmpId});
-          tmpId++;
+          tmpRow.push({val: 0, id: uuidv4()});
+          //tmpId++;
         }
         this.cells.push(tmpRow);
       }
