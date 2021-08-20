@@ -2,7 +2,7 @@
   <div>
     <b-img
       @click="modalShow = !modalShow"
-      v-bind="colorPrevProps(newColor)"
+      v-bind="colorPrevProps(initColor)"
       rounded
     ></b-img>
 
@@ -37,7 +37,6 @@ export default {
   },
   data() {
     return {
-      newColor: this.initColor,
       modalColor: this.initColor,
       modalShow: false
     }
@@ -52,11 +51,10 @@ export default {
       this.modalColor = value.hex;
     },
     resetModal() {
-      this.modalColor = this.newColor;
+      this.modalColor = this.initColor;
     },
     updateSelectedColor() {
-      this.newColor = this.modalColor;
-      this.$emit('update-color-option', this.id, this.newColor);
+      this.$emit('update-color-option', this.id, this.modalColor);
     }
   }
 }
