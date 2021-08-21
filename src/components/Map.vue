@@ -26,7 +26,9 @@
             width: getZoom(), minWidth: getZoom(),
             height: getZoom(), minheight: getZoom() }"
           class="cell"
-          @click="updateCell(cell)"
+          @mousedown="mouseDown = true, updateCell(cell)"
+          @mouseup="mouseDown = false"
+          @mouseover="updateCell(cell)"
         />
       </div>
     </div>
@@ -81,7 +83,8 @@ export default {
     return {
       windowHeight: window.innerHeight - 80 + 'px',
       // The currently chosen row/col
-      alterProps: { ind: null, name: null, isRow: null, canDel: null }
+      alterProps: { ind: null, name: null, isRow: null, canDel: null },
+      mouseDown: false
     }
   },
   mounted() {
@@ -131,7 +134,7 @@ export default {
     },
     // Update the value of the given cell to match the currently active option.
     updateCell(cell) {
-      cell.val = this.option;
+      if (this.mouseDown) cell.val = this.option;
     },
     // Get the color for the given value.
     getColor(val) {
