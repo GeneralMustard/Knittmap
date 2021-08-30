@@ -95,6 +95,7 @@ export default {
   beforeDestroy() { 
     window.removeEventListener('resize', this.onResize); 
   },
+
   methods: {
     // Returns a list with copies of the given row,
     // the number of copies correstonds to the chosen number of repititions.
