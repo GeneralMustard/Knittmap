@@ -108,9 +108,12 @@ export default {
       prevZoom: 10,
 
       preview: false,
-      prevReps: 3
+      prevReps: 3,
+
+      savedData: ''
     }
   },
+
   computed: {
     rowNr() {
       return this.cells.length;
@@ -120,22 +123,21 @@ export default {
       return 0;
     }
   },
+
   mounted() {
+    window.addEventListener('beforeunload', this.onBeforeUnload);
     this.$bvModal.show('new-map');
   },
+
   methods: {
     initMap(rowNr, colNr) {
       this.options = [{ id: 0, color: '#ABABAB' }];
-
-      this.cells = []; // reset cells
-      // Fill the map with empty cells
-      //var tmpId = 0;
+      this.cells = [];
       
       for (let i = 0; i < rowNr; i++) {
         var tmpRow = [];
         for (let j = 0; j < colNr; j++) {
           tmpRow.push({val: 0, id: uuidv4()});
-          //tmpId++;
         }
         this.cells.push(tmpRow);
       }
@@ -166,9 +168,11 @@ export default {
     },
     // Save the active knittmap to a json-file
     saveFile() {
-      var data = { options: this.options, cells: this.cells };
-      var blob = new Blob([JSON.stringify(data)]);
+      var data = this.dataAsString();
+      var blob = new Blob([data]);
       FileSaver.saveAs(blob, "knittmap.json");
+
+      this.savedData = data;
     },
     // Load a file and render the knittmap from this
     loadFile(file) {
@@ -177,8 +181,12 @@ export default {
         var data = JSON.parse(e.target.result);
         this.options = data.options;
         this.cells = data.cells;
+        this.savedData = this.dataAsString();
       };
       reader.readAsText(file);
+    },
+    dataAsString() {
+      return JSON.stringify({ options: this.options, cells: this.cells });
     },
     zoom(n) {
       if (this.preview) this.prevZoom += (5 * n);
@@ -191,6 +199,11 @@ export default {
     zoomInAvailable() {
       if (this.preview) return this.prevZoom >= 55;
       else return this.workZoom >= 55;
+    },
+    // Ask for confirmation before unload.
+    onBeforeUnload(event) {
+      var currentData = this.dataAsString();
+      if (currentData != this.savedData) event.preventDefault();
     }
   }
 }
