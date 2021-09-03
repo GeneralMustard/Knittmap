@@ -35,24 +35,31 @@
       <b-navbar-nav class="ml-auto">
         <b-button-group size="sm">
           <b-button
-            v-b-modal.new-map variant="light" class="mr-2"
+            v-b-modal.new-map variant="success"
           >New</b-button>
           <b-button
-            variant="success" class="mr-2" v-on:click="saveFile"
-          >Save</b-button>
-          <b-button
-            class="mr-2"
+            class="ml-2 mr-2"
             v-b-modal.load-file
           >Load</b-button>
+          <b-button
+            variant="light"
+            v-on:click="saveFile" :disabled="cells.length < 1"
+          >Save</b-button>
+          <b-button
+            variant="info" class="ml-2 mr-2"
+            v-b-toggle.sb-info
+          >?</b-button>
         </b-button-group>
       </b-navbar-nav>
     </b-navbar>
 
-    <NewMap v-on:new-map="initMap"/>
+    <StartModal/>
+    <NewMap   v-on:new-map="initMap"/>
     <LoadFile v-on:load-file="loadFile"/>
+    <Info     v-on:load-example="loadExample"/>
 
     <b-container>
-      <b-row>
+      <b-row v-if="cells.length > 0" >
         <b-col>
           <Map
             v-bind:options="this.options"
@@ -82,7 +89,9 @@
 <script>
 import Map from './components/Map.vue'
 import CellOptions from './components/CellOptions.vue'
+import Info from './components/Info.vue'
 
+import StartModal from './components/StartModal'
 import NewMap from './components/NewMap'
 import LoadFile from './components/LoadFile'
 import FileSaver from 'file-saver';
@@ -95,7 +104,9 @@ export default {
     Map,
     CellOptions,
     NewMap,
-    LoadFile
+    LoadFile,
+    Info,
+    StartModal
   },
   data() {
     return {
@@ -125,8 +136,9 @@ export default {
   },
 
   mounted() {
+    this.savedData = this.dataAsString();
     window.addEventListener('beforeunload', this.onBeforeUnload);
-    this.$bvModal.show('new-map');
+    this.$bvModal.show('start-modal');
   },
 
   methods: {
@@ -185,6 +197,29 @@ export default {
       };
       reader.readAsText(file);
     },
+    loadExample() {
+      var doLoadExample = () => {
+        const data = require('./assets/example/example_1.json');
+        // Deep copy with JSON
+        this.options = JSON.parse(JSON.stringify(data.options));
+        this.cells = JSON.parse(JSON.stringify(data.cells));
+        this.savedData = this.dataAsString();
+      }
+      this.continueModal(doLoadExample);
+    },
+    continueModal(func) {
+      if(this.dataAsString() != this.savedData) {
+        this.$bvModal.msgBoxConfirm('Warning! Continue without saving?')
+        .then(value => {
+          if(value) func();
+        })
+        .catch(err => {
+          // An error occurred
+          console.log(err);
+        });
+      } else func();
+    },
+    // Get the current data as a string.
     dataAsString() {
       return JSON.stringify({ options: this.options, cells: this.cells });
     },
@@ -215,6 +250,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #ffffff;
+  color: #000000;
 }
 </style>
