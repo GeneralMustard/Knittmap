@@ -186,7 +186,7 @@ export default {
 
       this.savedData = data;
     },
-    // Load a file and render the knittmap from this
+    // Load a file and render the map from this.
     loadFile(file) {
       let reader = new FileReader();
       reader.onload = e => {
@@ -197,6 +197,7 @@ export default {
       };
       reader.readAsText(file);
     },
+    // Render an example map.
     loadExample() {
       var doLoadExample = () => {
         const data = require('./assets/example/example_1.json');
@@ -207,6 +208,8 @@ export default {
       }
       this.continueModal(doLoadExample);
     },
+    // Show modal to ask if user wants to continue.
+    // If yes, the function will be used.
     continueModal(func) {
       if(this.dataAsString() != this.savedData) {
         this.$bvModal.msgBoxConfirm('Warning! Continue without saving?')
