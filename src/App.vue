@@ -198,12 +198,28 @@ export default {
       reader.readAsText(file);
     },
     loadExample() {
-      const data = require('./assets/example/example_1.json');
-      // Deep copy with JSON
-      this.options = JSON.parse(JSON.stringify(data.options));
-      this.cells = JSON.parse(JSON.stringify(data.cells));
-      this.savedData = this.dataAsString();
+      var doLoadExample = () => {
+        const data = require('./assets/example/example_1.json');
+        // Deep copy with JSON
+        this.options = JSON.parse(JSON.stringify(data.options));
+        this.cells = JSON.parse(JSON.stringify(data.cells));
+        this.savedData = this.dataAsString();
+      }
+      this.continueModal(doLoadExample);
     },
+    continueModal(func) {
+      if(this.dataAsString() != this.savedData) {
+        this.$bvModal.msgBoxConfirm('Warning! Continue without saving?')
+        .then(value => {
+          if(value) func();
+        })
+        .catch(err => {
+          // An error occurred
+          console.log(err);
+        });
+      } else func();
+    },
+    // Get the current data as a string.
     dataAsString() {
       return JSON.stringify({ options: this.options, cells: this.cells });
     },
